@@ -1,0 +1,5 @@
+
+.book-authors:not(:last-child):after {
+    content: ", "
+}
+
