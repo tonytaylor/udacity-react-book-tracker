@@ -26,28 +26,8 @@ const BookSearch = ({shelves, onShelfSelect}) => {
 
         event.target.value && (async (query) => {
             const results = await BooksAPI.search(query);
-            setBooks(results);
+            setBooks(results.error ? results.items : results);
         })(event.target.value);
-    };
-
-    /**
-     * @description A bundle of predicates asserting that the text supplied matches either:
-     *                - the `title` property,
-     *                - the `authors` property, or
-     *                - the `industryIdentifiers.identifier` property
-     * @param book
-     * @returns {boolean|boolean}
-     */
-    const performSearch = (book) => {
-
-        const isbnLookup = (s) => {
-            return book.industryIdentifiers && book.industryIdentifiers.filter((a) => a.identifier === s).length > 0;
-        };
-        const authorLookup = (s) => {
-            return book.authors && book.authors.filter((a) => a.toLowerCase().includes(s.toLowerCase())).length > 0;
-        };
-        return book.title.toLowerCase().includes(searchEntry.toLowerCase()) ||
-            authorLookup(searchEntry) || isbnLookup(searchEntry);
     };
 
     return (
@@ -69,7 +49,7 @@ const BookSearch = ({shelves, onShelfSelect}) => {
             </div>
             <div className="search-books-results">
                 <ol className="books-grid">
-                    {(searchEntry.length > 0) && books.filter(performSearch).map((book, index) => {
+                    {(searchEntry.length > 0) && books.map((book, index) => {
                         return (
                             <Book
                                 key={index}

@@ -1,7 +1,9 @@
+import {useEffect} from "react";
 import {Routes, Route, Link} from "react-router-dom";
 import {useLocalStorage} from "../../util/LocalStorage";
 import BookSearch from "../BookSearch/BookSearch";
 import Bookcase from "../Bookcase/Bookcase";
+import * as BooksAPI from '../../util/BooksAPI';
 
 import './App.css';
 
@@ -9,6 +11,11 @@ import './App.css';
 function App() {
     const [books, setBooks] = useLocalStorage("myReads-books", []);
 
+    useEffect(() => {
+        BooksAPI.getAll()
+            .then((data) => books.length > 0 && setBooks(data))
+            .catch((e) => console.log('error:', e));
+    }, [books, setBooks]);
     /**
      * @description Takes a list of 'items' and returns a list of objects consisting of original
      *              string and its camel-cased counterpart.
@@ -39,7 +46,7 @@ function App() {
      */
     const onShelfChange = (book) => {
         return (shelf) => {
-
+            //console.log(shelf);
             if (shelf === 'none') {
                 setBooks(books.filter((b) => b.id !== book.id))
             } else {

@@ -29,10 +29,10 @@ const Book = ({ book, shelves, onShelfChange }) => {
                         width: 128,
                         height: 188,
                         backgroundImage:
-                            `url(${book.imageLinks.smallThumbnail})`,
+                            `url(${book.imageLinks.smallThumbnail || ""})`,
                     }}
                 ></div>}
-                <BookContextMenu options={shelves} onShelfChange={onShelfChange} />
+                <BookContextMenu book={book} options={shelves} onShelfChange={onShelfChange} />
             </div>
             <div className="book-title">{book.title}</div>
             {book.authors && book.authors.map(

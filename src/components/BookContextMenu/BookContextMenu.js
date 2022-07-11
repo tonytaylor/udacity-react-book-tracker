@@ -1,6 +1,6 @@
 import {useNavigate, useLocation} from "react-router-dom";
 
-const BookContextMenu = ({ options, onShelfChange }) => {
+const BookContextMenu = ({ book, options, onShelfChange }) => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -13,8 +13,8 @@ const BookContextMenu = ({ options, onShelfChange }) => {
 
     return (
         <div className="book-shelf-changer">
-            <select value={"none"} onChange={onChange}>
-                <option value="none" disabled>Move to...</option>
+            <select value={book.currentShelf} onChange={onChange}>
+                <option value="">Move to...</option>
                 {options.map((shelf) => {
                     return (
                         <option key={shelf.id} value={shelf.id}>{shelf.title}</option>
