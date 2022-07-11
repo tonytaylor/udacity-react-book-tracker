@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -16,31 +16,35 @@ const BookSearch = ({shelves, onShelfSelect}) => {
     const [searchEntry, setSearchEntry] = useState('');
     const [books, setBooks] = useState([]);
 
-    useEffect(() => {
-        (async () => setBooks(await BooksAPI.getAll()))();
-    }, []);
-
     /**
      * @description Event handler to update local state.
      * @param event
      * @returns void
      */
-    const onInputUpdate = (event) => setSearchEntry(event.target.value);
+    const onInputUpdate = (event) => {
+        setSearchEntry(event.target.value);
+
+        event.target.value && (async (query) => {
+            const results = await BooksAPI.search(query);
+            setBooks(results);
+        })(event.target.value);
+    };
 
     /**
      * @description A bundle of predicates asserting that the text supplied matches either:
      *                - the `title` property,
      *                - the `authors` property, or
-     *                - the `industryIdentifiers.identifer` property
+     *                - the `industryIdentifiers.identifier` property
      * @param book
      * @returns {boolean|boolean}
      */
     const performSearch = (book) => {
+
         const isbnLookup = (s) => {
-            return book.industryIdentifiers.filter((a) => a.identifier === s).length > 0;
+            return book.industryIdentifiers && book.industryIdentifiers.filter((a) => a.identifier === s).length > 0;
         };
         const authorLookup = (s) => {
-            return book.authors.filter((a) => a.toLowerCase().includes(searchEntry.toLowerCase())).length > 0;
+            return book.authors && book.authors.filter((a) => a.toLowerCase().includes(s.toLowerCase())).length > 0;
         };
         return book.title.toLowerCase().includes(searchEntry.toLowerCase()) ||
             authorLookup(searchEntry) || isbnLookup(searchEntry);

@@ -23,7 +23,7 @@ const Book = ({ book, shelves, onShelfChange }) => {
             draggable={"true"}
             className="book">
             <div className="book-top">
-                <div
+                {book.imageLinks && <div
                     className="book-cover"
                     style={{
                         width: 128,
@@ -31,11 +31,11 @@ const Book = ({ book, shelves, onShelfChange }) => {
                         backgroundImage:
                             `url(${book.imageLinks.smallThumbnail})`,
                     }}
-                ></div>
+                ></div>}
                 <BookContextMenu options={shelves} onShelfChange={onShelfChange} />
             </div>
             <div className="book-title">{book.title}</div>
-            {book.authors.map(
+            {book.authors && book.authors.map(
                 (author, index) => <div className={"book-authors"} key={index}>{author}</div>)}
         </div>
     );
@@ -44,7 +44,7 @@ const Book = ({ book, shelves, onShelfChange }) => {
 Book.propTypes = {
   book: PropTypes.shape({
       title: PropTypes.string,
-      imageLinks: PropTypes.shape({smallThumbnail: PropTypes.string}),
+      //imageLinks: PropTypes.shape({smallThumbnail: PropTypes.string}),
       authors: PropTypes.arrayOf(PropTypes.string),
       industryIdentifiers: PropTypes.arrayOf(PropTypes.shape({
           identifier: PropTypes.string.isRequired,
