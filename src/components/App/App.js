@@ -12,9 +12,10 @@ function App() {
     const [books, setBooks] = useLocalStorage("myReads-books", []);
 
     useEffect(() => {
-        BooksAPI.getAll()
-            .then((data) => books.length > 0 && setBooks(data))
-            .catch((e) => console.log('error:', e));
+        (async () => {
+            const data = await BooksAPI.getAll();
+            books.length < 1 && setBooks(data);
+        })();
     }, [books, setBooks]);
     /**
      * @description Takes a list of 'items' and returns a list of objects consisting of original
@@ -50,7 +51,7 @@ function App() {
             if (shelf === 'none') {
                 setBooks(books.filter((b) => b.id !== book.id))
             } else {
-                book.currentShelf = shelf;
+                book.shelf = shelf;
 
                 const identicalBook = books.findIndex((b) => b.id === book.id);
                 const updatedList = (identicalBook > -1) ?
@@ -66,7 +67,7 @@ function App() {
         <div className={"list-books"}>
             <div className={"list-books-title"}><h1>MyReads</h1></div>
             <Bookcase books={books} shelves={shelves} onShelfChange={onShelfChange} />
-            <div className={"open-search"}><Link to="/add">add a book</Link></div>
+            <div className={"open-search"}><Link to="/search">add a book</Link></div>
         </div>
     );
 
@@ -78,7 +79,7 @@ function App() {
         <div className="app">
             <Routes>
                 <Route exact path={"/"} element={HomePage} />
-                <Route path={"/add"} element={SearchPage} />
+                <Route path={"/search"} element={SearchPage} />
             </Routes>
         </div>
     );

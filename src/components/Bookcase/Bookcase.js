@@ -17,7 +17,7 @@ const Bookcase = ({ shelves, books, onShelfChange }) => {
                         <Bookshelf
                             key={index}
                             title={shelf.title}
-                            books={books.filter((book) => book.currentShelf === shelf.id)}
+                            books={books.filter((book) => book.shelf === shelf.id)}
                             shelves={all}
                             onShelfChange={onShelfChange} />
                     );
