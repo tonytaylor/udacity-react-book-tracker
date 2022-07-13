@@ -44,7 +44,7 @@ const Book = ({ book, shelves, onShelfChange }) => {
 Book.propTypes = {
   book: PropTypes.shape({
       title: PropTypes.string,
-      //imageLinks: PropTypes.shape({smallThumbnail: PropTypes.string}),
+      imageLinks: PropTypes.shape({smallThumbnail: PropTypes.string}),
       authors: PropTypes.arrayOf(PropTypes.string),
       industryIdentifiers: PropTypes.arrayOf(PropTypes.shape({
           identifier: PropTypes.string.isRequired,
