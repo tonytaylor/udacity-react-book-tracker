@@ -6,7 +6,6 @@ const BookContextMenu = ({ book, options, onShelfChange }) => {
     const location = useLocation();
 
     const onChange = (event) => {
-        console.log('changed');
         event.preventDefault();
         onShelfChange(event.target.value);
         (location.pathname === "/search") && navigate("/");
@@ -15,7 +14,7 @@ const BookContextMenu = ({ book, options, onShelfChange }) => {
     return (
         <div className="book-shelf-changer">
             <select value={book.shelf} onChange={onChange}>
-                <option value="">Move to...</option>
+                <option value="" disabled>Move to...</option>
                 {options.map((shelf) => {
                     return (
                         <option key={shelf.id} value={shelf.id}>{shelf.title}</option>

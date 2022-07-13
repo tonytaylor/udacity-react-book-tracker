@@ -1,6 +1,5 @@
-import {useEffect} from "react";
+import {useState, useEffect} from "react";
 import {Routes, Route, Link} from "react-router-dom";
-import {useLocalStorage} from "../../util/LocalStorage";
 import BookSearch from "../BookSearch/BookSearch";
 import Bookcase from "../Bookcase/Bookcase";
 import * as BooksAPI from '../../util/BooksAPI';
@@ -9,7 +8,7 @@ import './App.css';
 
 
 function App() {
-    const [books, setBooks] = useLocalStorage("myReads-books", []);
+    const [books, setBooks] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -47,19 +46,11 @@ function App() {
      */
     const onShelfChange = (book) => {
         return (shelf) => {
-            //console.log(shelf);
-            if (shelf === 'none') {
-                setBooks(books.filter((b) => b.id !== book.id))
-            } else {
-                book.shelf = shelf;
-
-                const identicalBook = books.findIndex((b) => b.id === book.id);
-                const updatedList = (identicalBook > -1) ?
-                    [...books.slice(0, identicalBook), book, ...books.slice(identicalBook + 1)] :
-                    [...books, book];
-
-                setBooks(updatedList);
-            }
+            book.shelf = shelf;
+            BooksAPI.update(book, shelf)
+                .then((result) => console.log('update api returns: ', result))
+                .then(() => setBooks([...books.filter((b) => b.id !== book.id), book]))
+                .catch((err) => console.log('error:', err));
         };
     };
 

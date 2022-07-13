@@ -7,8 +7,10 @@ import * as BooksAPI from "../../util/BooksAPI";
 
 /**
  * @description Performs searches for books.
+ * @param books
  * @param shelves
  * @param onShelfSelect
+ * @param onQueryUpdate
  * @returns {JSX.Element}
  * @constructor
  */
@@ -26,6 +28,7 @@ const BookSearch = ({shelves, onShelfSelect}) => {
 
         event.target.value && (async (query) => {
             const results = await BooksAPI.search(query);
+            //console.log('records with a shelf value:', results.filter((v) => v.hasOwnProperty('shelf')).length);
             setBooks(results.error ? results.items : results);
         })(event.target.value);
     };
