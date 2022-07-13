@@ -14,9 +14,15 @@ import * as BooksAPI from "../../util/BooksAPI";
  * @returns {JSX.Element}
  * @constructor
  */
-const BookSearch = ({shelves, onShelfSelect}) => {
+const BookSearch = ({books, shelves, onShelfSelect}) => {
     const [searchEntry, setSearchEntry] = useState('');
-    const [books, setBooks] = useState([]);
+    const [bks, setBks] = useState([]);
+
+    const searchBooks = (bs) => bs.map((searchedBook) => {
+        const myBook = books.filter((myBook) => myBook.id === searchedBook.id)[0];
+        searchedBook.shelf = myBook ? myBook.shelf : "none";
+        return searchedBook;
+    });
 
     /**
      * @description Event handler to update local state.
@@ -28,8 +34,7 @@ const BookSearch = ({shelves, onShelfSelect}) => {
 
         event.target.value && (async (query) => {
             const results = await BooksAPI.search(query);
-            //console.log('records with a shelf value:', results.filter((v) => v.hasOwnProperty('shelf')).length);
-            setBooks(results.error ? results.items : results);
+            setBks(results.error ? results.items : searchBooks(results));
         })(event.target.value);
     };
 
@@ -52,7 +57,7 @@ const BookSearch = ({shelves, onShelfSelect}) => {
             </div>
             <div className="search-books-results">
                 <ol className="books-grid">
-                    {(searchEntry.length > 0) && books.map((book, index) => {
+                    {(searchEntry.length > 0) && bks.map((book, index) => {
                         return (
                             <Book
                                 key={index}

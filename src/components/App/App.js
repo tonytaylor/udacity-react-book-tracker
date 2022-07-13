@@ -63,7 +63,7 @@ function App() {
     );
 
     const SearchPage = (
-        <BookSearch shelves={shelves} onShelfSelect={onShelfChange} />
+        <BookSearch books={books} shelves={shelves} onShelfSelect={onShelfChange} />
     );
 
     return (
