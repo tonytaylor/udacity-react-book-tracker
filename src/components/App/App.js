@@ -12,8 +12,12 @@ function App() {
 
     useEffect(() => {
         (async () => {
-            const data = await BooksAPI.getAll();
-            books.length < 1 && setBooks(data);
+            try {
+                const data = await BooksAPI.getAll();
+                books.length < 1 && setBooks(data);
+            } catch (err) {
+                console.log('error:', err);
+            }
         })();
     }, [books, setBooks]);
     /**
@@ -46,11 +50,16 @@ function App() {
      */
     const onShelfChange = (book) => {
         return (shelf) => {
-            book.shelf = shelf;
-            BooksAPI.update(book, shelf)
-                .then((result) => console.log('update api returns: ', result))
-                .then(() => setBooks([...books.filter((b) => b.id !== book.id), book]))
-                .catch((err) => console.log('error:', err));
+            (async () => {
+                try {
+                    book.shelf = shelf;
+                    const results = await BooksAPI.update(book, shelf);
+                    console.log('update api returns: ', results);
+                    setBooks([...books.filter((b) => b.id !== book.id), book])
+                } catch (err) {
+                    console.log('error:', err)
+                }
+            })();
         };
     };
 
